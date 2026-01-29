@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
 public class VGModClient implements ClientModInitializer {
@@ -38,6 +39,13 @@ public class VGModClient implements ClientModInitializer {
 				Component msg = Component.translatable("VGMod detected: " + text + "!");
 				client.player.displayClientMessage(msg, false);
 				VGModAction.newPlayers.add(getPlayer(text));
+				return;
+			}
+			if (text.contains("left the game")) {
+				Component msg = Component.translatable("VGMod detected: " + text + " left!");
+				client.player.displayClientMessage(msg, false);
+				int time = (int)(Instant.now().toEpochMilli() / 60000);;
+				VGModAction.recentJoins.put(getPlayer(text), time);
 				return;
 			}
 			if (!text.contains("joined the game")) return;
