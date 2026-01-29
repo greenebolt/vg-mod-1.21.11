@@ -73,6 +73,14 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
+                        ClientCommandManager.literal("rules").executes(
+                                CommandHandler::rules
+                        )
+                )
+        );
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> dispatcher.register(
+
                         ClientCommandManager.literal("ranks").executes(
                                 CommandHandler::ranks
                         )
