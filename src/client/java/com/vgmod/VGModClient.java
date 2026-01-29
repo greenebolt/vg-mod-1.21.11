@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 
 public class VGModClient implements ClientModInitializer {
 
@@ -33,29 +34,36 @@ public class VGModClient implements ClientModInitializer {
 			String text = message.getString();
 			if (text.contains("VGMod")) return;
 			VGMod.LOGGER.info(text);
+			if (text.contains("Welcome to ")) {
+				Component msg = Component.translatable("VGMod detected: " + text + "!");
+				client.player.displayClientMessage(msg, false);
+				VGModAction.newPlayers.add(getPlayer(text));
+				return;
+			}
 			if (!text.contains("joined the game")) return;
 			if (!Config.wbMessages && !swb) return;
 			String player = getPlayer(text);
 			Component msg = Component.translatable("VGMod detected: " + player + "!");
 			client.player.displayClientMessage(msg, false);
-			VGModAction.sendWbMessage(player);
+			CompletableFuture.supplyAsync(() -> VGModAction.sendWbMessage(player));
 		});
 
-//		ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, timestamp) -> {
-//			Minecraft client = Minecraft.getInstance();
-//			if (client.player == null) return;
-//
-//			if (sender != null) {
-//				String from = sender.name().toString();
-//				Component msg2 = Component.translatable("VGMod recieved from: " + from);
-//				client.player.displayClientMessage(msg2, false);
-//			}
-//
-//			String text = message.getString();
-//			VGMod.LOGGER.info(text);
-//			Component msg = Component.translatable("VGMod recieved: " + text);
-//			client.player.displayClientMessage(msg, false);
-//		});
+		ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, timestamp) -> {
+			Minecraft client = Minecraft.getInstance();
+			if (client.player == null) return;
+
+			if (sender != null) {
+				String from = sender.name().toString();
+				VGMod.LOGGER.info("VGMod recieved message from: " + from);
+				//Component msg2 = Component.translatable("VGMod recieved from: " + from);
+				//client.player.displayClientMessage(msg2, false);
+			}
+
+			String text = message.getString();
+			VGMod.LOGGER.info(text);
+			//Component msg = Component.translatable("VGMod recieved: " + text);
+			//client.player.displayClientMessage(msg, false);
+		});
 
 	}
 
@@ -65,7 +73,7 @@ public class VGModClient implements ClientModInitializer {
 		String player = textComponents[1];
 		if (player.equals("joined")) player = textComponents[0];
 		if (player.equals("Miner]")) player = textComponents[2];
-		if (player.equals("Gamer}")) player = textComponents[2];
+		if (player.equals("Gamer]")) player = textComponents[2];
 		return player;
 	}
 }

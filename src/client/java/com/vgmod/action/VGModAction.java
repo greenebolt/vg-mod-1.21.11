@@ -2,6 +2,7 @@ package com.vgmod.action;
 
 import com.vgmod.Config;
 import com.vgmod.Constants;
+import com.vgmod.VGMod;
 import com.vgmod.VGModClient;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.ChatFormatting;
@@ -13,6 +14,7 @@ import java.util.*;
 
 public class VGModAction {
     public static Map<String, Integer> recentJoins = new HashMap<>();
+    public static List<String> newPlayers = new ArrayList<>();
 
     public static void GoToHub(){
         Minecraft client = Minecraft.getInstance();
@@ -23,14 +25,18 @@ public class VGModAction {
         //client.player.connection.sendCommand("summon firework_rocket ~ ~1 ~ {Life:1,FireworksItem:{id:firework_rocket,components:{fireworks:{flight_duration:1,explosions:[{shape:star,has_twinkle:1b,has_trail:1b,colors:[I;8439583,16383998,1481884,6192150],fade_colors:[I;8439583]}]}}}}");
         client.player.connection.sendCommand("trigger cmd set 1");
     }
+    public static String lobby() {
+        GoToHub();
+        return "done";
+    }
     public static String displayHelp(){
         Minecraft client = Minecraft.getInstance();
         Component msg = Component.translatable("VGMOD: List of commands:")
                 .withStyle(ChatFormatting.DARK_GREEN);
         client.player.displayClientMessage(msg, false);
         List<String> commands = new ArrayList<>(Arrays.asList(
-           "/help-VGMod\n/stats\n/rules",
-           "/ranks\n/about\n/beans",
+           "/help-VGMod\n/lobby\n/stats\n/rules",
+           "/ranks\n/info\n/beans",
            "/sbinv\n/join [game]\n/toggle-wb-messages [true/false]"
         ));
         sendSlow(commands);
@@ -50,9 +56,6 @@ public class VGModAction {
     public static String displayStats(){
         try {
             Minecraft client = Minecraft.getInstance();
-            Component msg = Component.translatable("VGMOD: Displaying your stats...")
-                    .withStyle(ChatFormatting.DARK_GREEN);
-            client.player.displayClientMessage(msg, false);
             client.player.connection.sendCommand("trigger cmd set 10");
             Thread.sleep(100);
             client.player.connection.sendCommand("trigger cmd set 11");
@@ -67,33 +70,21 @@ public class VGModAction {
     }
     public static String displayRules(){
         Minecraft client = Minecraft.getInstance();
-        Component msg = Component.translatable("VGMOD: Displaying VG rules...")
-                .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
         client.player.connection.sendCommand("trigger cmd set 3");
         return "done";
     }
     public static String displayRanks(){
         Minecraft client = Minecraft.getInstance();
-        Component msg = Component.translatable("VGMOD: Displaying VG ranks...")
-                .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
         client.player.connection.sendCommand("trigger cmd set 4");
         return "done";
     }
-    public static String displayAbout(){
+    public static String displayInfo(){
         Minecraft client = Minecraft.getInstance();
-        Component msg = Component.translatable("VGMOD: Displaying VG info...")
-                .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
         client.player.connection.sendCommand("trigger cmd set 5");
         return "done";
     }
     public static String displayBeans(){
         Minecraft client = Minecraft.getInstance();
-        Component msg = Component.translatable("VGMOD: Displaying VG info...")
-                .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
         client.player.connection.sendCommand("trigger cmd set 10");
         return "done";
     }
@@ -183,8 +174,13 @@ public class VGModAction {
                 msg.replaceAll("##", player);
             }
             // Delay and send message
-            int delay = random.nextInt(1500, 3000);
+            int delay = random.nextInt(2000, 5000);
             Thread.sleep(delay);
+            // Check to make sure player is not new
+            if (newPlayers.contains(player)) {
+                newPlayers.remove(player);
+                msg = "Welcome " + player + "!";
+            }
             client.player.connection.sendChat(msg);
             recentJoins.put(player, time);
         } catch (InterruptedException e) {

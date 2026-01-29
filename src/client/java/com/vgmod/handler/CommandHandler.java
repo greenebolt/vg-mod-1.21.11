@@ -57,16 +57,16 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("stats").executes(
-                                CommandHandler::stats
+                        ClientCommandManager.literal("lobby").executes(
+                                CommandHandler::lobby
                         )
                 )
         );
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("rules").executes(
-                                CommandHandler::rules
+                        ClientCommandManager.literal("stats").executes(
+                                CommandHandler::stats
                         )
                 )
         );
@@ -81,8 +81,8 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("about").executes(
-                                CommandHandler::about
+                        ClientCommandManager.literal("info").executes(
+                                CommandHandler::info
                         )
                 )
         );
@@ -131,6 +131,11 @@ public class CommandHandler {
         CompletableFuture.supplyAsync(() -> VGModAction.displayHelp());
         return 1;
     }
+    private static int lobby(CommandContext<FabricClientCommandSource> context){
+        assert Minecraft.getInstance().player != null;
+        CompletableFuture.supplyAsync(() -> VGModAction.lobby());
+        return 1;
+    }
     private static int stats(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
         CompletableFuture.supplyAsync(() -> VGModAction.displayStats());
@@ -146,9 +151,9 @@ public class CommandHandler {
         CompletableFuture.supplyAsync(() -> VGModAction.displayRanks());
         return 1;
     }
-    private static int about(CommandContext<FabricClientCommandSource> context){
+    private static int info(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayAbout());
+        CompletableFuture.supplyAsync(() -> VGModAction.displayInfo());
         return 1;
     }
     private static int beans(CommandContext<FabricClientCommandSource> context){
@@ -188,7 +193,7 @@ public class CommandHandler {
         String arg = StringArgumentType.getString(context, "game");
         Minecraft client = Minecraft.getInstance();
         if (Constants.games.containsKey(arg)) {
-            Component msg = Component.translatable("Joining game: \"%s\".", arg)
+            Component msg = Component.translatable("VGMOD: Joining game: \"%s\".", arg)
                     .withStyle(ChatFormatting.DARK_GREEN);
             client.player.displayClientMessage(msg, false);
             client.player.connection.sendCommand("trigger cmd set " + (Constants.games.get(arg)+170000));
