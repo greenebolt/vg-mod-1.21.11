@@ -125,7 +125,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("join")
+                        ClientCommandManager.literal("warp")
                                 .then(
                                         ClientCommandManager.argument("game", StringArgumentType.string())
                                                 .suggests(GAME_SUGGESTIONS)

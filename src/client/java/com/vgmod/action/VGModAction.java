@@ -39,7 +39,7 @@ public class VGModAction {
         List<String> commands = new ArrayList<>(Arrays.asList(
            "/help-VGMod\n/lobby\n/stats\n/rules",
            "/ranks\n/info\n/beans",
-           "/sbinv\n/join [game]\n/toggle-wb-messages [true/false]"
+           "/sbinv\n/warp [game]\n/toggle-wb-messages [true/false]"
         ));
         sendSlow(commands);
         return "done";
