@@ -36,9 +36,9 @@ public class VGModClient implements ClientModInitializer {
 			if (text.contains("VGMod")) return;
 			VGMod.LOGGER.info(text);
 			if (text.contains("Welcome to ")) {
-				Component msg = Component.translatable("VGMod detected: " + text + "!");
+				Component msg = Component.translatable("VGMod detected new player: " + text);
 				client.player.displayClientMessage(msg, false);
-				VGModAction.newPlayers.add(getPlayer(text));
+				VGModAction.newPlayers.add(VGModAction.mostRecentPlayerJoin);
 				return;
 			}
 			if (text.contains("left the game")) {
@@ -53,6 +53,7 @@ public class VGModClient implements ClientModInitializer {
 			String player = getPlayer(text);
 			Component msg = Component.translatable("VGMod detected: " + player + "!");
 			client.player.displayClientMessage(msg, false);
+			VGModAction.mostRecentPlayerJoin = player;
 			CompletableFuture.supplyAsync(() -> VGModAction.sendWbMessage(player));
 		});
 

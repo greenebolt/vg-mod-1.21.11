@@ -13,8 +13,10 @@ import java.time.Instant;
 import java.util.*;
 
 public class VGModAction {
+    // Variable Declaration for auto WB
     public static Map<String, Integer> recentJoins = new HashMap<>();
     public static List<String> newPlayers = new ArrayList<>();
+    public static String mostRecentPlayerJoin;
 
     public static void GoToHub(){
         Minecraft client = Minecraft.getInstance();
