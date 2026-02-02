@@ -4,6 +4,7 @@ import com.vgmod.Config;
 import com.vgmod.Constants;
 import com.vgmod.VGMod;
 import com.vgmod.VGModClient;
+import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -175,17 +176,24 @@ public class VGModAction {
     }
     public static String sendWbMessage(String player){
         try {
-            // Has the player recently joined?
+            // Has the player recently left the game?
             int time = (int)(Instant.now().toEpochMilli() / 60000);
-            if (recentlyLeft.containsKey(player)) {
-                if ((time - recentlyLeft.get(player)) < 1) {
-                    return "done";
+            for (Map.Entry<String, Integer> i : recentlyLeft.entrySet()) {
+                if ((time - i.getValue()) < 1) {
+                    recentlyLeft.remove(i.getKey());
                 }
+            }
+            if (recentlyLeft.containsKey(player)) {
+                return "done";
             }
 
             Minecraft client = Minecraft.getInstance();
-            String msg = "wb " + player;
             Random random = new Random();
+            String msg = "wb " + player;
+
+            if (random.nextInt(1,3) == 1){
+                msg = "wb";
+            }
 
             if (VGModClient.swb) {
                 msg = Constants.secretWBMessages[random.nextInt(0, Constants.secretWBMessages.length)];
