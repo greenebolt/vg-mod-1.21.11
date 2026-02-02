@@ -42,10 +42,10 @@ public class VGModClient implements ClientModInitializer {
 				return;
 			}
 			if (text.contains("left the game")) {
-				Component msg = Component.translatable("VGMod detected: " + text + " left!");
+				int time = (int)(Instant.now().toEpochMilli() / 60000);
+				Component msg = Component.translatable("VGMod detected: " + text + " at time: " + time);
 				client.player.displayClientMessage(msg, false);
-				int time = (int)(Instant.now().toEpochMilli() / 60000);;
-				VGModAction.recentJoins.put(getPlayer(text), time);
+				VGModAction.recentlyLeft.put(getPlayer(text), time);
 				return;
 			}
 			if (!text.contains("joined the game")) return;

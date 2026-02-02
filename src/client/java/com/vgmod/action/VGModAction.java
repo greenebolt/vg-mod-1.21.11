@@ -14,7 +14,7 @@ import java.util.*;
 
 public class VGModAction {
     // Variable Declaration for auto WB
-    public static Map<String, Integer> recentJoins = new HashMap<>();
+    public static Map<String, Integer> recentlyLeft = new HashMap<>();
     public static List<String> newPlayers = new ArrayList<>();
     public static String mostRecentPlayerJoin;
 
@@ -39,6 +39,7 @@ public class VGModAction {
         List<String> commands = new ArrayList<>(Arrays.asList(
            "/help-VGMod\n/lobby\n/stats\n/rules",
            "/ranks\n/info\n/beans",
+           "/hats\n/particles\n/titles",
            "/sbinv\n/warp [game]\n/toggle-wb-messages [true/false]"
         ));
         sendSlow(commands);
@@ -88,6 +89,21 @@ public class VGModAction {
     public static String displayBeans(){
         Minecraft client = Minecraft.getInstance();
         client.player.connection.sendCommand("trigger cmd set 10");
+        return "done";
+    }
+    public static String hats(){
+        Minecraft client = Minecraft.getInstance();
+        client.player.connection.sendCommand("trigger cmd set 521");
+        return "done";
+    }
+    public static String particles(){
+        Minecraft client = Minecraft.getInstance();
+        client.player.connection.sendCommand("trigger cmd set 522");
+        return "done";
+    }
+    public static String titles(){
+        Minecraft client = Minecraft.getInstance();
+        client.player.connection.sendCommand("trigger cmd set 524");
         return "done";
     }
     public static String sendInvInf(){
@@ -161,8 +177,8 @@ public class VGModAction {
         try {
             // Has the player recently joined?
             int time = (int)(Instant.now().toEpochMilli() / 60000);
-            if (recentJoins.containsKey(player)) {
-                if ((recentJoins.get(player) - time) < 5) {
+            if (recentlyLeft.containsKey(player)) {
+                if ((time - recentlyLeft.get(player)) < 1) {
                     return "done";
                 }
             }
@@ -184,7 +200,6 @@ public class VGModAction {
                 msg = "Welcome " + player + "!";
             }
             client.player.connection.sendChat(msg);
-            recentJoins.put(player, time);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

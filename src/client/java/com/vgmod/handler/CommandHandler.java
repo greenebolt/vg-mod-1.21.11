@@ -105,6 +105,30 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
+                        ClientCommandManager.literal("hats").executes(
+                                CommandHandler::hats
+                        )
+                )
+        );
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> dispatcher.register(
+
+                        ClientCommandManager.literal("particles").executes(
+                                CommandHandler::particles
+                        )
+                )
+        );
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> dispatcher.register(
+
+                        ClientCommandManager.literal("titles").executes(
+                                CommandHandler::titles
+                        )
+                )
+        );
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> dispatcher.register(
+
                         ClientCommandManager.literal("sbinv").executes(
                                 CommandHandler::sbinv
                         )
@@ -167,6 +191,21 @@ public class CommandHandler {
     private static int beans(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
         CompletableFuture.supplyAsync(() -> VGModAction.displayBeans());
+        return 1;
+    }
+    private static int hats(CommandContext<FabricClientCommandSource> context){
+        assert Minecraft.getInstance().player != null;
+        CompletableFuture.supplyAsync(() -> VGModAction.hats());
+        return 1;
+    }
+    private static int particles(CommandContext<FabricClientCommandSource> context){
+        assert Minecraft.getInstance().player != null;
+        CompletableFuture.supplyAsync(() -> VGModAction.particles());
+        return 1;
+    }
+    private static int titles(CommandContext<FabricClientCommandSource> context){
+        assert Minecraft.getInstance().player != null;
+        CompletableFuture.supplyAsync(() -> VGModAction.titles());
         return 1;
     }
     private static int sbinv(CommandContext<FabricClientCommandSource> context){
