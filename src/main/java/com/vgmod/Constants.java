@@ -37,12 +37,23 @@ public class Constants {
             Map.entry("t", 30),
             Map.entry("pkr", 31)
     );
+    // 100% GreeneBolt generated messages (No AI)
     public static String[] secretWBMessages = {
             "## has stepped onto the stage! Everybody get up on your feet and clap for ##!",
             "Oh, ##... I never thought I would see you again but you have returned!",
             "So then, welcome ## with great joy and honor people like ##.",
             "##, if people do not welcome you, leave their town and shake the dust off your feet as a testimony against them... Unless they are AFK or course.",
             "You are welcome at VG, ##,” the old man said. “Let me supply whatever you need. Only don’t spend the night in the square.",
-            "##, my fellow prisoner Aristarchus sends you his greetings, as does Mark"
+            "##, my fellow prisoner Aristarchus sends you his greetings, as does Mark",
+            "Welcome back, ##! I take great pleasure in your coming.",
+            "Anyone who welcomes you welcomes me, and anyone who welcomes me welcomes the one who sent me.",
+            "Welcome aboard, ##! We have been eagerly anticipating your arrival.",
+            "I am absolutely thrilled that this day is finally here, ##",
+            "Jumping Jeepers!!! ITS ##!!!!!",
+            "## you knocked my socks off.",
+            "##, My jaw has dropped to the floor. I CAN'T BELIEVE MY EYES!!! WB!!!!!",
+            "Well, I never! It be ##!",
+            "I spy ##. WB",
+            "Folks, you cannot make this up. ## has arrived again."
     };
 }

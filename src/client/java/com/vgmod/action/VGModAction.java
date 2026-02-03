@@ -179,7 +179,7 @@ public class VGModAction {
             // Has the player recently left the game?
             int time = (int)(Instant.now().toEpochMilli() / 60000);
             for (Map.Entry<String, Integer> i : recentlyLeft.entrySet()) {
-                if ((time - i.getValue()) < 1) {
+                if ((time - i.getValue()) > 2) {
                     recentlyLeft.remove(i.getKey());
                 }
             }
@@ -200,7 +200,7 @@ public class VGModAction {
                 msg.replaceAll("##", player);
             }
             // Delay and send message
-            int delay = random.nextInt(2000, 5000);
+            int delay = random.nextInt(3000, 6000);
             Thread.sleep(delay);
             // Check to make sure player is not new
             if (newPlayers.contains(player)) {
