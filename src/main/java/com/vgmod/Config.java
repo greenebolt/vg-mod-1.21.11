@@ -1,12 +1,21 @@
 package com.vgmod;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 public class Config {
     private static final Properties defaultValues = new Properties();
-    private String fileName;
+    public static String fileName;
 
+    public static String configVersion = Constants.VGMOD_VERSION;
     public static boolean wbMessages = false;
+    public static String friendList = "Notch,Dream,GreeneBolt";
+    public static List<String> friends = new ArrayList<>();
 
     Config(String fileName) {
         this.fileName = fileName;
@@ -29,18 +38,18 @@ public class Config {
             e.printStackTrace();
         }
 
-        wbMessages = parseIntOrDefault(properties.getProperty(Constants.CONFIG_WB_MESSAGES), 1) != 0;
-    }
-
-    private static int parseIntOrDefault(String s, int defaultValue) {
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        configVersion = properties.getProperty("CONFIG_VERSION");
+        wbMessages = properties.getProperty("WB_MESSAGES_ACTIVE").equals("true");
+        friendList = properties.getProperty("FRIEND_LIST");
+        friends.addAll(Arrays.asList(friendList.split(",")));
+        VGMod.LOGGER.info("Loaded friends...");
+        VGMod.LOGGER.info(friends.toString());
+        if (!configVersion.equals(Config.configVersion)) {
+            // The mod has been updated: Update config file
         }
     }
 
-    public void save() {
+    public static void save() {
         try {
             File config = new File(fileName);
             boolean existed = config.exists();
@@ -50,7 +59,10 @@ public class Config {
 
             FileWriter configWriter = new FileWriter(config);
 
-            writeBoolean(configWriter, Constants.CONFIG_WB_MESSAGES, wbMessages);
+            writeString(configWriter, "CONFIG_VERSION", Constants.VGMOD_VERSION);
+            writeBoolean(configWriter, "WB_MESSAGES_ACTIVE", wbMessages);
+            writeString(configWriter, "FRIEND_LIST", friendList);
+            friends.addAll(Arrays.asList(friendList.split(",")));
 
             configWriter.close();
 
@@ -67,10 +79,12 @@ public class Config {
     }
 
     private static void writeBoolean(FileWriter configWriter, String name, boolean value) throws IOException {
-        writeString(configWriter, name, value ? "1" : "0");
+        writeString(configWriter, name, value ? "true" : "false");
     }
 
     static {
-        defaultValues.setProperty(Constants.CONFIG_WB_MESSAGES, "0");
+        defaultValues.setProperty("WB_MESSAGES_ACTIVE", "false");
+        defaultValues.setProperty("CONFIG_VERSION","1.0.0");
+        defaultValues.setProperty("FRIEND_LIST", "Notch,Dream,GreeneBolt");
     }
 }

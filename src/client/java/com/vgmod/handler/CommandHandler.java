@@ -3,6 +3,8 @@ package com.vgmod.handler;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.datafixers.kinds.Const;
 import com.vgmod.Config;
 import com.vgmod.Constants;
 import com.vgmod.action.VGModAction;
@@ -13,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -23,6 +26,30 @@ public class CommandHandler {
     private static final SuggestionProvider<FabricClientCommandSource> WB_SUGGESTIONS = (context, builder) -> {
         // Example list of custom suggestions
         String[] suggestions = {"true", "false"};
+        // Filter suggestions based on what the user has already typed
+        Stream<String> stream = Stream.of(suggestions).filter(s -> s.startsWith(builder.getRemaining()));
+        // Add each suggestion to the builder
+        for (String suggestion : (Iterable<String>) stream::iterator) {
+            builder.suggest(suggestion);
+        }
+        // Build and return the suggestions future
+        return builder.buildFuture();
+    };
+    private static final SuggestionProvider<FabricClientCommandSource> SBINFO_SUGGESTIONS = (context, builder) -> {
+        // Example list of custom suggestions
+        String[] suggestions = {"invite","nether", "end","wither","animals"};
+        // Filter suggestions based on what the user has already typed
+        Stream<String> stream = Stream.of(suggestions).filter(s -> s.startsWith(builder.getRemaining()));
+        // Add each suggestion to the builder
+        for (String suggestion : (Iterable<String>) stream::iterator) {
+            builder.suggest(suggestion);
+        }
+        // Build and return the suggestions future
+        return builder.buildFuture();
+    };
+    private static final SuggestionProvider<FabricClientCommandSource> FRIEND_SUGGESTIONS = (context, builder) -> {
+        // Example list of custom suggestions
+        String[] suggestions = {"add", "remove", "list"};
         // Filter suggestions based on what the user has already typed
         Stream<String> stream = Stream.of(suggestions).filter(s -> s.startsWith(builder.getRemaining()));
         // Add each suggestion to the builder
@@ -129,9 +156,28 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("sbinv").executes(
-                                CommandHandler::sbinv
-                        )
+                        ClientCommandManager.literal("sbinfo")
+                                .executes(CommandHandler::sbinfoSelf)
+                                .then(
+                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                                .suggests(SBINFO_SUGGESTIONS)
+                                                .executes(CommandHandler::sbinfo)
+                                )
+                )
+        );
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> dispatcher.register(
+
+                        ClientCommandManager.literal("friend-VG")
+                                .then(
+                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                                .suggests(FRIEND_SUGGESTIONS)
+                                                .executes(CommandHandler::friends)
+                                                .then (
+                                                        ClientCommandManager.argument("player", StringArgumentType.string())
+                                                                .executes(CommandHandler::friends)
+                                                )
+                                )
                 )
         );
         ClientCommandRegistrationCallback.EVENT.register(
@@ -149,7 +195,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("warp")
+                        ClientCommandManager.literal("join")
                                 .then(
                                         ClientCommandManager.argument("game", StringArgumentType.string())
                                                 .suggests(GAME_SUGGESTIONS)
@@ -208,9 +254,50 @@ public class CommandHandler {
         CompletableFuture.supplyAsync(() -> VGModAction.titles());
         return 1;
     }
-    private static int sbinv(CommandContext<FabricClientCommandSource> context){
+    private static int sbinfoSelf(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.sendInvInf());
+        CompletableFuture.supplyAsync(() -> VGModAction.sbInfoSelf());
+        return 1;
+    }
+    private static int sbinfo(CommandContext<FabricClientCommandSource> context){
+        assert Minecraft.getInstance().player != null;
+        String arg = StringArgumentType.getString(context, "value");
+            CompletableFuture.supplyAsync(() -> VGModAction.sbInfo(arg));
+        return 1;
+    }
+    private static int friends(CommandContext<FabricClientCommandSource> context) {
+        assert Minecraft.getInstance().player != null;
+        Minecraft client = Minecraft.getInstance();
+        String arg = StringArgumentType.getString(context, "value");
+        Component msg = Component.translatable("Unknown value: \"%s\" Please use add/remove/list", arg)
+                .withStyle(ChatFormatting.RED);
+        if (arg.equals("add")) {
+            String username = StringArgumentType.getString(context, "player");
+            if (Config.friends.contains(username)) {
+                msg = Component.translatable("You are already friends with: \"%s\" ", username)
+                        .withStyle(ChatFormatting.RED);
+            } else {
+                Config.friendList = Config.friendList + "," + username;
+                Config.friends.add(username);
+                msg = Component.translatable("VGMod added friend: \"%s\" ", username)
+                        .withStyle(ChatFormatting.DARK_GREEN);
+            }
+        } else if (arg.equals("remove")) {
+            String username = StringArgumentType.getString(context, "player");
+            if (Config.friends.contains(username)) {
+                Config.friendList = Config.friendList.replaceAll("," + username, "");
+                Config.friends.remove(username);
+                msg = Component.translatable("VGMod removed friend: \"%s\" ", username)
+                        .withStyle(ChatFormatting.DARK_GREEN);
+            } else {
+                msg = Component.translatable("Could not remove friend:: \"%s\". You are not friends with this player.", username)
+                        .withStyle(ChatFormatting.RED);
+            }
+        } else if (arg.equals("list")) {
+            msg = Component.translatable("VGMod: Friends: "+Config.friendList)
+                    .withStyle(ChatFormatting.DARK_GREEN);
+        }
+        client.player.displayClientMessage(msg, false);
         return 1;
     }
     private static int toggleWbMessages(CommandContext<FabricClientCommandSource> context){

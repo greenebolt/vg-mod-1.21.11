@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class VGModAction {
     // Variable Declaration for auto WB
@@ -19,6 +20,20 @@ public class VGModAction {
     public static List<String> newPlayers = new ArrayList<>();
     public static String mostRecentPlayerJoin;
 
+    public static String displayHelp(){
+        Minecraft client = Minecraft.getInstance();
+        Component msg = Component.translatable("VGMOD: List of commands:")
+                .withStyle(ChatFormatting.DARK_GREEN);
+        client.player.displayClientMessage(msg, false);
+        List<String> commands = new ArrayList<>(Arrays.asList(
+                "/help-VGMod\n/lobby\n/stats\n/rules",
+                "/ranks\n/info\n/beans",
+                "/hats\n/particles\n/titles\n/friend-VG [add/remove/list] [username]",
+                "/sbinfo [invite/nether/end/wither/animals]\n/join [game]\n/toggle-wb-messages [true/false]"
+        ));
+        sendSlow(commands);
+        return "done";
+    }
     public static void GoToHub(){
         Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
@@ -30,20 +45,6 @@ public class VGModAction {
     }
     public static String lobby() {
         GoToHub();
-        return "done";
-    }
-    public static String displayHelp(){
-        Minecraft client = Minecraft.getInstance();
-        Component msg = Component.translatable("VGMOD: List of commands:")
-                .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
-        List<String> commands = new ArrayList<>(Arrays.asList(
-           "/help-VGMod\n/lobby\n/stats\n/rules",
-           "/ranks\n/info\n/beans",
-           "/hats\n/particles\n/titles",
-           "/sbinv\n/warp [game]\n/toggle-wb-messages [true/false]"
-        ));
-        sendSlow(commands);
         return "done";
     }
     public static void  sendSlow(List<String> message) {
@@ -105,11 +106,6 @@ public class VGModAction {
     public static String titles(){
         Minecraft client = Minecraft.getInstance();
         client.player.connection.sendCommand("trigger cmd set 524");
-        return "done";
-    }
-    public static String sendInvInf(){
-        Minecraft client = Minecraft.getInstance();
-        client.player.connection.sendChat("Type \".invite [username]\" and don't use a \"/\"");
         return "done";
     }
     public static String toggleWbMessages(){
@@ -174,6 +170,38 @@ public class VGModAction {
         }
         return "done";
     }
+    public static String sbInfoSelf() {
+        Minecraft client = Minecraft.getInstance();
+        Component msg = Component.translatable("VGMod: Only you can see this message:")
+                .withStyle(ChatFormatting.DARK_GREEN);
+        client.player.displayClientMessage(msg, false);
+        sendSlow(Arrays.stream(Constants.sbInfoMessages).toList());
+        return "done";
+    }
+    public static String sbInfo(String arg) {
+        Minecraft client = Minecraft.getInstance();
+        if (arg.equals("invite")) {
+            client.getConnection().sendChat(Constants.sbInfoMessages[0]);
+            return "done";
+        } else if (arg.equals("nether")) {
+            client.getConnection().sendChat(Constants.sbInfoMessages[1]);
+            return "done";
+        } else if (arg.equals("end")) {
+            client.getConnection().sendChat(Constants.sbInfoMessages[2]);
+            return "done";
+        } else if (arg.equals("wither")) {
+            client.getConnection().sendChat(Constants.sbInfoMessages[3]);
+            return "done";
+        } else if (arg.equals("animals")) {
+            client.getConnection().sendChat(Constants.sbInfoMessages[4]);
+            return "done";
+        } else {
+            Component msg = Component.translatable("Unknown value: \"%s\" Please use a valid argument.", arg)
+                    .withStyle(ChatFormatting.RED);
+            client.player.displayClientMessage(msg, false);
+        }
+        return "done";
+    }
     public static String sendWbMessage(String player){
         try {
             // Has the player recently left the game?
@@ -197,7 +225,7 @@ public class VGModAction {
 
             if (VGModClient.swb) {
                 msg = Constants.secretWBMessages[random.nextInt(0, Constants.secretWBMessages.length)];
-                msg.replaceAll("##", player);
+                msg = msg.replaceAll("##", player);
             }
             // Delay and send message
             int delay = random.nextInt(3000, 6000);

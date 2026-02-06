@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Constants {
-    static final String CONFIG_WB_MESSAGES = "WBMessages";
-
+    public static final String VGMOD_VERSION = "1.0.0";
     public static final Map<String, Integer> games = Map.ofEntries(
             Map.entry("a", 1),
             Map.entry("otc", 2),
@@ -38,8 +37,8 @@ public class Constants {
             Map.entry("pkr", 31)
     );
     // 100% GreeneBolt generated messages (No AI)
-    public static String[] secretWBMessages = {
-            "## has stepped onto the stage! Everybody get up on your feet and clap for ##!",
+        public static String[] secretWBMessages = {
+            "## has stepped onto the stage! Everybody, clap.",
             "Oh, ##... I never thought I would see you again but you have returned!",
             "So then, welcome ## with great joy and honor people like ##.",
             "##, if people do not welcome you, leave their town and shake the dust off your feet as a testimony against them... Unless they are AFK or course.",
@@ -55,5 +54,12 @@ public class Constants {
             "Well, I never! It be ##!",
             "I spy ##. WB",
             "Folks, you cannot make this up. ## has arrived again."
+    };
+    public static String[] sbInfoMessages = {
+            "Type \".invite [username]\" and don't use a \"/\"",
+            "To get to the nether you need to craft a compass with iron from zombies and redstone from wiches.",
+            "To get to the End, you need to craft a diamond block which is sold by the wandering trader (spawns every 1-1.5 hours after you unlock the nether). He sells diamonds for 16 emeralds and 1 nether star.",
+            "All mobs nether mobs spawn in the nether. Be creative and make a farm to get wither skulls! Mob griefing is off so you can make a little box for the wither so that he won't escape. Be careful, it can clip sometimes!",
+            "Only hostile mobs spawn naturally. To get passive mobs, you need to purchase spawn eggs from the wandering trader who comes after you unlock the nether. He sells random eggs for 64 emeralds."
     };
 }

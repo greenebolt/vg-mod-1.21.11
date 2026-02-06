@@ -1,15 +1,22 @@
 package com.vgmod;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.vgmod.action.VGModAction;
 import com.vgmod.handler.CommandHandler;
 import com.vgmod.handler.KeyInputHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
 import java.io.File;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class VGModClient implements ClientModInitializer {
@@ -28,7 +35,19 @@ public class VGModClient implements ClientModInitializer {
 		mc = Minecraft.getInstance();
 		config = new Config(mc.gameDirectory.getAbsolutePath() + File.separator + "config" + File.separator + "VGMod.cfg");
 		config.read();
-
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+			// Code to execute when joining
+			if (client.getCurrentServer().name.equals("VG")) {
+				// Joined VG
+			}
+			Component msg = Component.translatable("VGMod: WB Messages Are: "+ Config.wbMessages)
+					.withStyle(ChatFormatting.DARK_GREEN);
+			client.player.displayClientMessage(msg, false);
+		});
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			VGMod.LOGGER.info("Saving Config...");
+			Config.save();
+		});
 		// Detects messages sent by the GAME for auto wb
 		ClientReceiveMessageEvents.GAME.register((message, timestamp) -> {
 			Minecraft client = Minecraft.getInstance();
@@ -36,42 +55,30 @@ public class VGModClient implements ClientModInitializer {
 			if (text.contains("VGMod")) return;
 			VGMod.LOGGER.info(text);
 			if (text.contains("Welcome to ")) {
-				Component msg = Component.translatable("VGMod detected new player: " + text);
-				client.player.displayClientMessage(msg, false);
+				//Component msg = Component.translatable("VGMod detected new player: " + text);
+				//client.player.displayClientMessage(msg, false);
 				VGModAction.newPlayers.add(VGModAction.mostRecentPlayerJoin);
 				return;
 			}
 			if (text.contains("left the game")) {
 				int time = (int)(Instant.now().toEpochMilli() / 60000);
-				Component msg = Component.translatable("VGMod detected: " + text + " at time: " + time);
-				client.player.displayClientMessage(msg, false);
+				//Component msg = Component.translatable("VGMod detected: " + text + " at time: " + time);
+				//client.player.displayClientMessage(msg, false);
 				VGModAction.recentlyLeft.put(getPlayer(text), time);
 				return;
 			}
 			if (!text.contains("joined the game")) return;
-			if (!Config.wbMessages && !swb) return;
 			String player = getPlayer(text);
-			Component msg = Component.translatable("VGMod detected: " + player + "!");
-			client.player.displayClientMessage(msg, false);
+			if (Config.friends.contains(player)) {
+				Component msg = Component.translatable("VGMod: Your friend, \"%s\" has joined the game!", player)
+						.withStyle(ChatFormatting.DARK_GREEN);
+				client.player.displayClientMessage(msg, true);
+			}
+			if (!Config.wbMessages && !swb) return;
+			//Component msg = Component.translatable("VGMod detected: " + player + "!");
+			//client.player.displayClientMessage(msg, false);
 			VGModAction.mostRecentPlayerJoin = player;
 			CompletableFuture.supplyAsync(() -> VGModAction.sendWbMessage(player));
-		});
-
-		ClientReceiveMessageEvents.CHAT.register((message, signedMessage, sender, params, timestamp) -> {
-			Minecraft client = Minecraft.getInstance();
-			if (client.player == null) return;
-
-			if (sender != null) {
-				String from = sender.name().toString();
-				VGMod.LOGGER.info("VGMod recieved message from: " + from);
-				//Component msg2 = Component.translatable("VGMod recieved from: " + from);
-				//client.player.displayClientMessage(msg2, false);
-			}
-
-			String text = message.getString();
-			VGMod.LOGGER.info(text);
-			//Component msg = Component.translatable("VGMod recieved: " + text);
-			//client.player.displayClientMessage(msg, false);
 		});
 
 	}
