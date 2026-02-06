@@ -124,11 +124,11 @@ public class VGModAction {
         Config.wbMessages = !Config.wbMessages;
         if (Config.wbMessages) {
             msg = Component.translatable("wb messages are now active!")
-                    .withStyle(ChatFormatting.DARK_GREEN);
+                    .withStyle(ChatFormatting.GREEN);
             client.player.displayClientMessage(msg, false);
         } else {
             msg = Component.translatable("wb messages are now inactive.")
-                    .withStyle(ChatFormatting.DARK_GREEN);
+                    .withStyle(ChatFormatting.RED);
             client.player.displayClientMessage(msg, false);
         }
         return "done";
@@ -142,12 +142,12 @@ public class VGModAction {
         if (arg) {
             Config.wbMessages = true;
             msg = Component.translatable("wb messages are now active!")
-                    .withStyle(ChatFormatting.DARK_GREEN);
+                    .withStyle(ChatFormatting.GREEN);
             client.player.displayClientMessage(msg, false);
         } else {
             Config.wbMessages = false;
             msg = Component.translatable("wb messages are now inactive.")
-                    .withStyle(ChatFormatting.DARK_GREEN);
+                    .withStyle(ChatFormatting.RED);
             client.player.displayClientMessage(msg, false);
         }
         return "done";
