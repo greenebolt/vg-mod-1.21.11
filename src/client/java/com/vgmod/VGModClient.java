@@ -50,35 +50,39 @@ public class VGModClient implements ClientModInitializer {
 		});
 		// Detects messages sent by the GAME for auto wb
 		ClientReceiveMessageEvents.GAME.register((message, timestamp) -> {
-			Minecraft client = Minecraft.getInstance();
-			String text = message.getString();
-			if (text.contains("VGMod")) return;
-			VGMod.LOGGER.info(text);
-			if (text.contains("Welcome to ")) {
-				//Component msg = Component.translatable("VGMod detected new player: " + text);
+			try {
+				Minecraft client = Minecraft.getInstance();
+				String text = message.getString();
+				if (text.contains("VGMod")) return;
+				VGMod.LOGGER.info(text);
+				if (text.contains("Welcome to ")) {
+					//Component msg = Component.translatable("VGMod detected new player: " + text);
+					//client.player.displayClientMessage(msg, false);
+					VGModAction.newPlayers.add(VGModAction.mostRecentPlayerJoin);
+					return;
+				}
+				if (text.contains("left the game")) {
+					int time = (int) (Instant.now().toEpochMilli() / 60000);
+					//Component msg = Component.translatable("VGMod detected: " + text + " at time: " + time);
+					//client.player.displayClientMessage(msg, false);
+					VGModAction.recentlyLeft.put(getPlayer(text), time);
+					return;
+				}
+				if (!text.contains("joined the game")) return;
+				String player = getPlayer(text);
+				if (Config.friends.contains(player)) {
+					Component msg = Component.translatable("VGMod: Your friend, \"%s\" has joined the game!", player)
+							.withStyle(ChatFormatting.DARK_GREEN);
+					client.player.displayClientMessage(msg, true);
+				}
+				if (!Config.wbMessages && !swb) return;
+				//Component msg = Component.translatable("VGMod detected: " + player + "!");
 				//client.player.displayClientMessage(msg, false);
-				VGModAction.newPlayers.add(VGModAction.mostRecentPlayerJoin);
-				return;
+				VGModAction.mostRecentPlayerJoin = player;
+				CompletableFuture.supplyAsync(() -> VGModAction.sendWbMessage(player));
+			} catch (Exception e) {
+				VGMod.LOGGER.error("Error in chat listener", e);
 			}
-			if (text.contains("left the game")) {
-				int time = (int)(Instant.now().toEpochMilli() / 60000);
-				//Component msg = Component.translatable("VGMod detected: " + text + " at time: " + time);
-				//client.player.displayClientMessage(msg, false);
-				VGModAction.recentlyLeft.put(getPlayer(text), time);
-				return;
-			}
-			if (!text.contains("joined the game")) return;
-			String player = getPlayer(text);
-			if (Config.friends.contains(player)) {
-				Component msg = Component.translatable("VGMod: Your friend, \"%s\" has joined the game!", player)
-						.withStyle(ChatFormatting.DARK_GREEN);
-				client.player.displayClientMessage(msg, true);
-			}
-			if (!Config.wbMessages && !swb) return;
-			//Component msg = Component.translatable("VGMod detected: " + player + "!");
-			//client.player.displayClientMessage(msg, false);
-			VGModAction.mostRecentPlayerJoin = player;
-			CompletableFuture.supplyAsync(() -> VGModAction.sendWbMessage(player));
 		});
 
 	}

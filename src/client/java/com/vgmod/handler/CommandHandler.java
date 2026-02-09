@@ -206,63 +206,63 @@ public class CommandHandler {
     }
     private static int help(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayHelp());
+        CompletableFuture.runAsync(() -> VGModAction.displayHelp());
         return 1;
     }
     private static int lobby(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.lobby());
+        CompletableFuture.runAsync(() -> VGModAction.lobby());
         return 1;
     }
     private static int stats(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayStats());
+        CompletableFuture.runAsync(() -> VGModAction.displayStats());
         return 1;
     }
     private static int rules(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayRules());
+        CompletableFuture.runAsync(() -> VGModAction.displayRules());
         return 1;
     }
     private static int ranks(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayRanks());
+        CompletableFuture.runAsync(() -> VGModAction.displayRanks());
         return 1;
     }
     private static int info(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayInfo());
+        CompletableFuture.runAsync(() -> VGModAction.displayInfo());
         return 1;
     }
     private static int beans(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.displayBeans());
+        CompletableFuture.runAsync(() -> VGModAction.displayBeans());
         return 1;
     }
     private static int hats(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.hats());
+        CompletableFuture.runAsync(() -> VGModAction.hats());
         return 1;
     }
     private static int particles(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.particles());
+        CompletableFuture.runAsync(() -> VGModAction.particles());
         return 1;
     }
     private static int titles(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.titles());
+        CompletableFuture.runAsync(() -> VGModAction.titles());
         return 1;
     }
     private static int sbinfoSelf(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.sbInfoSelf());
+        CompletableFuture.runAsync(() -> VGModAction.sbInfoSelf());
         return 1;
     }
     private static int sbinfo(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
         String arg = StringArgumentType.getString(context, "value");
-            CompletableFuture.supplyAsync(() -> VGModAction.sbInfo(arg));
+            CompletableFuture.runAsync(() -> VGModAction.sbInfo(arg));
         return 1;
     }
     private static int friends(CommandContext<FabricClientCommandSource> context) {
@@ -304,11 +304,11 @@ public class CommandHandler {
         assert Minecraft.getInstance().player != null;
         String arg = StringArgumentType.getString(context, "value");
         if (arg.equals("egg")) {
-            CompletableFuture.supplyAsync(() -> VGModAction.toggleSecretWbMessages());
+            CompletableFuture.runAsync(() -> VGModAction.toggleSecretWbMessages());
         } else if (arg.equals("true")) {
-            CompletableFuture.supplyAsync(() -> VGModAction.setWbMessages(true));
+            CompletableFuture.runAsync(() -> VGModAction.setWbMessages(true));
         } else if (arg.equals("false")) {
-            CompletableFuture.supplyAsync(() -> VGModAction.setWbMessages(false));
+            CompletableFuture.runAsync(() -> VGModAction.setWbMessages(false));
         } else {
             Minecraft client = Minecraft.getInstance();
             Component msg = Component.translatable("Unknown value: \"%s\" Please use true/false", arg)
@@ -319,7 +319,7 @@ public class CommandHandler {
     }
     private static int toggleWbMessagesNoArg(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
-        CompletableFuture.supplyAsync(() -> VGModAction.toggleWbMessages());
+        CompletableFuture.runAsync(() -> VGModAction.toggleWbMessages());
         return 1;
     }
     private static int joinGame(CommandContext<FabricClientCommandSource> context){
