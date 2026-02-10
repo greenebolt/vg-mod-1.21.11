@@ -112,7 +112,7 @@ public class VGModAction {
             client.player.displayClientMessage(msg, false);
         } else if (arg.equals("subtitle")) {
             VGModClient.friendMessagingMode = arg;
-            msg = Component.translatable("friend messages now display in sidebar!")
+            msg = Component.translatable("friend messages now display in subtitle!")
                     .withStyle(ChatFormatting.GREEN);
             client.player.displayClientMessage(msg, false);
         } else if (arg.equals("none")) {
