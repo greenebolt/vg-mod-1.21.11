@@ -28,7 +28,7 @@ public class VGModAction {
         List<String> commands = new ArrayList<>(Arrays.asList(
                 "/help-VGMod\n/lobby\n/stats\n/rules",
                 "/ranks\n/info\n/beans",
-                "/hats\n/particles\n/titles\n/friend-VG [add/remove/list] [username]",
+                "/hats\n/particles\n/titles\n/friend-VG [add/remove/list] [username]\n/friend-set-display [subtitle/chat/none]",
                 "/sbinfo [invite/nether/end/wither/animals]\n/join [game]\n/toggle-wb-messages [true/false]"
         ));
         sendSlow(commands);
@@ -40,7 +40,6 @@ public class VGModAction {
         Component msg = Component.translatable("VG MOD: Sending you to lobby...")
                 .withStyle(ChatFormatting.DARK_GREEN);
         client.player.displayClientMessage(msg, false);
-        //client.player.connection.sendCommand("summon firework_rocket ~ ~1 ~ {Life:1,FireworksItem:{id:firework_rocket,components:{fireworks:{flight_duration:1,explosions:[{shape:star,has_twinkle:1b,has_trail:1b,colors:[I;8439583,16383998,1481884,6192150],fade_colors:[I;8439583]}]}}}}");
         client.player.connection.sendCommand("trigger cmd set 1");
     }
     public static String lobby() {
@@ -101,6 +100,34 @@ public class VGModAction {
     public static String particles(){
         Minecraft client = Minecraft.getInstance();
         client.player.connection.sendCommand("trigger cmd set 522");
+        return "done";
+    }
+    public static String friendsSetDisplay(String arg){
+        Minecraft client = Minecraft.getInstance();
+        Component msg = Component.translatable("VGMOD: toggling friend messaging...")
+                .withStyle(ChatFormatting.DARK_GREEN);
+        VGModClient.swb = false;
+        client.player.displayClientMessage(msg, false);
+        if (arg.equals("chat")) {
+            VGModClient.friendMessagingMode = arg;
+            msg = Component.translatable("friend messages now display in chat!")
+                    .withStyle(ChatFormatting.GREEN);
+            client.player.displayClientMessage(msg, false);
+        } else if (arg.equals("sidebar")) {
+            VGModClient.friendMessagingMode = arg;
+            msg = Component.translatable("friend messages now display in sidebar!")
+                    .withStyle(ChatFormatting.GREEN);
+            client.player.displayClientMessage(msg, false);
+        } else if (arg.equals("none")) {
+            VGModClient.friendMessagingMode = arg;
+            msg = Component.translatable("friend messages are now off!")
+                    .withStyle(ChatFormatting.RED);
+            client.player.displayClientMessage(msg, false);
+        } else {
+            msg = Component.translatable("invalid arg \"%s\". Please use chat/subtitle/none.", arg)
+                    .withStyle(ChatFormatting.RED);
+            client.player.displayClientMessage(msg, false);
+        }
         return "done";
     }
     public static String titles(){

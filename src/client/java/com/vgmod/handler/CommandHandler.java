@@ -59,6 +59,18 @@ public class CommandHandler {
         // Build and return the suggestions future
         return builder.buildFuture();
     };
+    private static final SuggestionProvider<FabricClientCommandSource> FRIEND_DISPLAY_SUGGESTIONS = (context, builder) -> {
+        // Example list of custom suggestions
+        String[] suggestions = {"subtitle", "chat", "none"};
+        // Filter suggestions based on what the user has already typed
+        Stream<String> stream = Stream.of(suggestions).filter(s -> s.startsWith(builder.getRemaining()));
+        // Add each suggestion to the builder
+        for (String suggestion : (Iterable<String>) stream::iterator) {
+            builder.suggest(suggestion);
+        }
+        // Build and return the suggestions future
+        return builder.buildFuture();
+    };
     private static final SuggestionProvider<FabricClientCommandSource> GAME_SUGGESTIONS = (context, builder) -> {
         // Example list of custom suggestions
         String[] suggestions = Constants.games.keySet().toArray(new String[0]);
@@ -183,6 +195,17 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
+                        ClientCommandManager.literal("friend-set-display")
+                                .then(
+                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                                .suggests(FRIEND_DISPLAY_SUGGESTIONS)
+                                                .executes(CommandHandler::friendsSetDisplay)
+                                )
+                )
+        );
+        ClientCommandRegistrationCallback.EVENT.register(
+                (dispatcher, registryAccess) -> dispatcher.register(
+
                         ClientCommandManager.literal("toggle-wb-messages")
                                 .executes(CommandHandler::toggleWbMessagesNoArg)
                                 .then(
@@ -298,6 +321,12 @@ public class CommandHandler {
                     .withStyle(ChatFormatting.DARK_GREEN);
         }
         client.player.displayClientMessage(msg, false);
+        return 1;
+    }
+    private static int friendsSetDisplay(CommandContext<FabricClientCommandSource> context){
+        assert Minecraft.getInstance().player != null;
+        String arg = StringArgumentType.getString(context, "value");
+        CompletableFuture.runAsync(() -> VGModAction.friendsSetDisplay(arg));
         return 1;
     }
     private static int toggleWbMessages(CommandContext<FabricClientCommandSource> context){
