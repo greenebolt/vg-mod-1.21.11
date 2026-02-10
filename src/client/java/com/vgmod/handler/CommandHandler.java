@@ -3,8 +3,6 @@ package com.vgmod.handler;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.datafixers.kinds.Const;
 import com.vgmod.Config;
 import com.vgmod.Constants;
 import com.vgmod.action.VGModAction;
@@ -13,12 +11,8 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 

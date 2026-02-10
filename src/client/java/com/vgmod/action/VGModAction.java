@@ -2,9 +2,7 @@ package com.vgmod.action;
 
 import com.vgmod.Config;
 import com.vgmod.Constants;
-import com.vgmod.VGMod;
 import com.vgmod.VGModClient;
-import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -12,7 +10,6 @@ import net.minecraft.network.chat.Component;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class VGModAction {
     // Variable Declaration for auto WB
