@@ -110,7 +110,7 @@ public class VGModAction {
             msg = Component.translatable("friend messages now display in chat!")
                     .withStyle(ChatFormatting.GREEN);
             client.player.displayClientMessage(msg, false);
-        } else if (arg.equals("sidebar")) {
+        } else if (arg.equals("subtitle")) {
             VGModClient.friendMessagingMode = arg;
             msg = Component.translatable("friend messages now display in sidebar!")
                     .withStyle(ChatFormatting.GREEN);
