@@ -1,6 +1,4 @@
 package com.vgmod;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 import java.io.*;
 import java.util.ArrayList;
