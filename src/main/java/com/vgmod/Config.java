@@ -14,7 +14,7 @@ public class Config {
 
     public static String configVersion = Constants.VGMOD_VERSION;
     public static boolean wbMessages = false;
-    public static String friendList = "Notch,Dream,GreeneBolt";
+    public static String friendList = ",Notch,GreeneBolt";
     public static List<String> friends = new ArrayList<>();
 
     Config(String fileName) {
