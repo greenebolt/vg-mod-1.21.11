@@ -83,7 +83,7 @@ public class VGModClient implements ClientModInitializer {
 				}
 				if (!Config.wbMessages && !swb) return;
 				VGModAction.mostRecentPlayerJoin = player;
-				CompletableFuture.supplyAsync(() -> VGModAction.sendWbMessage(player));
+				CompletableFuture.runAsync(() -> VGModAction.sendWbMessage(player));
 			} catch (Exception e) {
 				VGMod.LOGGER.error("Error in chat listener", e);
 			}
