@@ -219,6 +219,9 @@ public class VGModAction {
         } else if (arg.equals("animals")) {
             client.getConnection().sendChat(Constants.sbInfoMessages[4]);
             return "done";
+        } else if (arg.equals("trader")) {
+            client.getConnection().sendChat(Constants.sbInfoMessages[5]);
+            return "done";
         } else {
             Component msg = Component.translatable("Unknown value: \"%s\" Please use a valid argument.", arg)
                     .withStyle(ChatFormatting.RED);
@@ -260,6 +263,26 @@ public class VGModAction {
                 msg = "Welcome " + player + "!";
             }
             client.player.connection.sendChat(msg);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return "done";
+    }
+    public static String joinGame(String game){
+        try {
+            Minecraft client = Minecraft.getInstance();
+            client.player.connection.sendCommand("trigger cmd set 1");
+            Thread.sleep(100);
+            if (Constants.games.containsKey(game)) {
+                Component msg = Component.translatable("VGMOD: Joining game: \"%s\".", game)
+                        .withStyle(ChatFormatting.DARK_GREEN);
+                client.player.displayClientMessage(msg, false);
+                client.player.connection.sendCommand("trigger cmd set " + (Constants.games.get(game)+170000));
+            } else {
+                Component msg = Component.translatable("Unknown game: \"%s\".", game)
+                        .withStyle(ChatFormatting.RED);
+                client.player.displayClientMessage(msg, false);
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

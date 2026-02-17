@@ -31,7 +31,7 @@ public class CommandHandler {
     };
     private static final SuggestionProvider<FabricClientCommandSource> SBINFO_SUGGESTIONS = (context, builder) -> {
         // Example list of custom suggestions
-        String[] suggestions = {"invite","nether", "end","wither","animals"};
+        String[] suggestions = {"invite","nether", "end","wither","animals","trader"};
         // Filter suggestions based on what the user has already typed
         Stream<String> stream = Stream.of(suggestions).filter(s -> s.startsWith(builder.getRemaining()));
         // Add each suggestion to the builder
@@ -348,17 +348,7 @@ public class CommandHandler {
     private static int joinGame(CommandContext<FabricClientCommandSource> context){
         assert Minecraft.getInstance().player != null;
         String arg = StringArgumentType.getString(context, "game");
-        Minecraft client = Minecraft.getInstance();
-        if (Constants.games.containsKey(arg)) {
-            Component msg = Component.translatable("VGMOD: Joining game: \"%s\".", arg)
-                    .withStyle(ChatFormatting.DARK_GREEN);
-            client.player.displayClientMessage(msg, false);
-            client.player.connection.sendCommand("trigger cmd set " + (Constants.games.get(arg)+170000));
-        } else {
-            Component msg = Component.translatable("Unknown game: \"%s\".", arg)
-                    .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
-        }
+        VGModAction.joinGame(arg);
         return 1;
     }
 }
