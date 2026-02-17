@@ -57,6 +57,7 @@ public class Constants {
             "To get to the nether you need to craft a compass with iron from zombies and redstone from wiches.",
             "To get to the End, you need to craft a diamond block which is sold by the wandering trader (spawns every 1-1.5 hours after you unlock the nether). He sells diamonds for 16 emeralds and 1 nether star.",
             "All mobs nether mobs spawn in the nether. Be creative and make a farm to get wither skulls! Mob griefing is off so you can make a little box for the wither so that he won't escape. Be careful, it can clip sometimes!",
-            "Only hostile mobs spawn naturally. To get passive mobs, you need to purchase spawn eggs from the wandering trader who comes after you unlock the nether. He sells random eggs for 64 emeralds."
+            "Only hostile mobs spawn naturally. To get passive mobs, you need to purchase spawn eggs from the wandering trader who comes after you unlock the nether. He sells random eggs for 64 emeralds.",
+            "You can get this and many other special items from the wandering trader who spawns after you unlock the nether. Full WT list can be found on the discord. \".discord\"."
     };
 }
