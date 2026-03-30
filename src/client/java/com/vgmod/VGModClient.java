@@ -39,7 +39,7 @@ public class VGModClient implements ClientModInitializer {
 			if (client.getCurrentServer().name.equals("VG")) {
 				// Joined VG
 				// TODO - disable commands if not vg
-			}
+			} else {swb = false; Config.wbMessages = false;}
 
 			Component msg = Component.translatable("VGMod: WB Messages Are: "+ Config.wbMessages)
 					.withStyle(ChatFormatting.DARK_GREEN);
