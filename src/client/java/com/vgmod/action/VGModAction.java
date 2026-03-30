@@ -21,12 +21,12 @@ public class VGModAction {
         Minecraft client = Minecraft.getInstance();
         Component msg = Component.translatable("VGMOD: List of commands:")
                 .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         List<String> commands = new ArrayList<>(Arrays.asList(
-                "/help-VGMod\n/lobby\n/stats\n/rules",
-                "/ranks\n/info\n/beans",
-                "/hats\n/particles\n/titles\n/friend-VG [add/remove/list] [username]\n/friend-set-display [subtitle/chat/none]",
-                "/sbinfo [invite/nether/end/wither/animals]\n/join [game]\n/toggle-wb-messages [true/false]"
+                "/vghelp\n/vglobby\n/vgstats\n/vgrules",
+                "/vgranks\n/vginfo\n/vgbeans",
+                "/vghats\n/vgparticles\n/vgtitles\n/vgfriend [add/remove/list] [username]\n/vgfriendsetdisplay [subtitle/chat/none]",
+                "/vgsb [invite/nether/end/wither/animals] # sends a helpful chat message for confused players\n/vgjoin [game]\n/vgtogglewbmessages [true/false]"
         ));
         sendSlow(commands);
         return "done";
@@ -36,7 +36,7 @@ public class VGModAction {
         if (client.player == null) return;
         Component msg = Component.translatable("VG MOD: Sending you to lobby...")
                 .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         client.player.connection.sendCommand("trigger cmd set 1");
     }
     public static String lobby() {
@@ -49,7 +49,7 @@ public class VGModAction {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || !it.hasNext()) return;
             Component msg = Component.translatable(it.next());
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
                 }
 
         );
@@ -104,26 +104,26 @@ public class VGModAction {
         Component msg = Component.translatable("VGMOD: toggling friend messaging...")
                 .withStyle(ChatFormatting.DARK_GREEN);
         VGModClient.swb = false;
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         if (arg.equals("chat")) {
             VGModClient.friendMessagingMode = arg;
             msg = Component.translatable("friend messages now display in chat!")
                     .withStyle(ChatFormatting.GREEN);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         } else if (arg.equals("subtitle")) {
             VGModClient.friendMessagingMode = arg;
             msg = Component.translatable("friend messages now display in subtitle!")
                     .withStyle(ChatFormatting.GREEN);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         } else if (arg.equals("none")) {
             VGModClient.friendMessagingMode = arg;
             msg = Component.translatable("friend messages are now off!")
                     .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         } else {
             msg = Component.translatable("invalid arg \"%s\". Please use chat/subtitle/none.", arg)
                     .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         }
         return "done";
     }
@@ -136,11 +136,11 @@ public class VGModAction {
         Minecraft client = Minecraft.getInstance();
         Component msg = Component.translatable("VGMOD: toggling wb messages...")
                 .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         if (VGModClient.swb) {
             msg = Component.translatable("wb messages are now inactive.")
                     .withStyle(ChatFormatting.DARK_GREEN);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
             VGModClient.swb = false;
             Config.wbMessages = false;
             return "done";
@@ -149,11 +149,11 @@ public class VGModAction {
         if (Config.wbMessages) {
             msg = Component.translatable("wb messages are now active!")
                     .withStyle(ChatFormatting.GREEN);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         } else {
             msg = Component.translatable("wb messages are now inactive.")
                     .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         }
         return "done";
     }
@@ -162,17 +162,17 @@ public class VGModAction {
         Component msg = Component.translatable("VGMOD: toggling wb messages...")
                 .withStyle(ChatFormatting.DARK_GREEN);
         VGModClient.swb = false;
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         if (arg) {
             Config.wbMessages = true;
             msg = Component.translatable("wb messages are now active!")
                     .withStyle(ChatFormatting.GREEN);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         } else {
             Config.wbMessages = false;
             msg = Component.translatable("wb messages are now inactive.")
                     .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         }
         return "done";
     }
@@ -180,17 +180,17 @@ public class VGModAction {
         Minecraft client = Minecraft.getInstance();
         Component msg = Component.translatable("VGMOD: toggling secret wb messages...")
                 .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         Config.wbMessages = false;
         VGModClient.swb = !VGModClient.swb;
         if (VGModClient.swb) {
             msg = Component.translatable("secret wb messages are now active!")
                     .withStyle(ChatFormatting.GOLD);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         } else {
             msg = Component.translatable("secret wb messages are now inactive.")
                     .withStyle(ChatFormatting.GOLD);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         }
         return "done";
     }
@@ -198,7 +198,7 @@ public class VGModAction {
         Minecraft client = Minecraft.getInstance();
         Component msg = Component.translatable("VGMod: Only you can see this message:")
                 .withStyle(ChatFormatting.DARK_GREEN);
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         sendSlow(Arrays.stream(Constants.sbInfoMessages).toList());
         return "done";
     }
@@ -225,47 +225,39 @@ public class VGModAction {
         } else {
             Component msg = Component.translatable("Unknown value: \"%s\" Please use a valid argument.", arg)
                     .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         }
         return "done";
     }
     public static String sendWbMessage(String player){
-        try {
-            // Has the player recently left the game?
-            int time = (int)(Instant.now().toEpochMilli() / 60000);
-            for (Map.Entry<String, Integer> i : recentlyLeft.entrySet()) {
-                if ((time - i.getValue()) > 2) {
-                    recentlyLeft.remove(i.getKey());
-                }
-            }
-            if (recentlyLeft.containsKey(player)) {
-                return "done";
-            }
-
-            Minecraft client = Minecraft.getInstance();
-            Random random = new Random();
-            String msg = "wb " + player;
-
-            if (random.nextInt(1,3) == 1){
-                msg = "wb";
-            }
-
-            if (VGModClient.swb) {
-                msg = Constants.secretWBMessages[random.nextInt(0, Constants.secretWBMessages.length)];
-                msg = msg.replaceAll("##", player);
-            }
-            // Delay and send message
-            int delay = random.nextInt(3000, 6000);
-            Thread.sleep(delay);
-            // Check to make sure player is not new
-            if (newPlayers.contains(player)) {
-                newPlayers.remove(player);
-                msg = "Welcome " + player + "!";
-            }
-            client.player.connection.sendChat(msg);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        // Has the player recently left the game?
+        int time = (int)(Instant.now().toEpochMilli() / 60000);
+        recentlyLeft.entrySet().removeIf(entry ->
+                (time - entry.getValue() > 2)
+        );
+        if (recentlyLeft.containsKey(player)) {
+            return "done";
         }
+
+        Minecraft client = Minecraft.getInstance();
+        Random random = new Random();
+        String msg = "wb " + player;
+
+        if (random.nextInt(1,3) == 1){
+            msg = "wb";
+        }
+
+        if (VGModClient.swb) {
+            msg = Constants.secretWBMessages[random.nextInt(0, Constants.secretWBMessages.length)];
+            msg = msg.replaceAll("##", player);
+        }
+        // Delay and send message
+        // Check to make sure player is not new
+        if (newPlayers.contains(player)) {
+            newPlayers.remove(player);
+            msg = "Welcome " + player + "!";
+        }
+        client.player.connection.sendChat(msg);
         return "done";
     }
     public static String joinGame(String game){
@@ -276,12 +268,12 @@ public class VGModAction {
             if (Constants.games.containsKey(game)) {
                 Component msg = Component.translatable("VGMOD: Joining game: \"%s\".", game)
                         .withStyle(ChatFormatting.DARK_GREEN);
-                client.player.displayClientMessage(msg, false);
+                client.player.sendSystemMessage(msg);
                 client.player.connection.sendCommand("trigger cmd set " + (Constants.games.get(game)+170000));
             } else {
                 Component msg = Component.translatable("Unknown game: \"%s\".", game)
                         .withStyle(ChatFormatting.RED);
-                client.player.displayClientMessage(msg, false);
+                client.player.sendSystemMessage(msg);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

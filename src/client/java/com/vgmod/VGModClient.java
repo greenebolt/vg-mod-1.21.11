@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Component;
 import java.io.File;
 import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class VGModClient implements ClientModInitializer {
 
@@ -36,12 +38,12 @@ public class VGModClient implements ClientModInitializer {
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			if (client.getCurrentServer().name.equals("VG")) {
 				// Joined VG
-				// TODO - maybe disable commands if not vg?
+				// TODO - disable commands if not vg
 			}
 
 			Component msg = Component.translatable("VGMod: WB Messages Are: "+ Config.wbMessages)
 					.withStyle(ChatFormatting.DARK_GREEN);
-			client.player.displayClientMessage(msg, false);
+			client.player.sendSystemMessage(msg);
 		});
 
 		// Code to execute when disconnecting from server
@@ -77,13 +79,18 @@ public class VGModClient implements ClientModInitializer {
 					Component msg = Component.translatable("VGMod: Your friend, \"%s\" has joined the game!", player)
 							.withStyle(ChatFormatting.DARK_GREEN);
 					if (friendMessagingMode.equals("subtitle"))
-					{client.player.displayClientMessage(msg, true);}
+					{client.player.sendSystemMessage(msg);}
 					else if (friendMessagingMode.equals("chat"))
-					{client.player.displayClientMessage(msg, false);}
+					{client.player.sendSystemMessage(msg);}
 				}
 				if (!Config.wbMessages && !swb) return;
 				VGModAction.mostRecentPlayerJoin = player;
-				CompletableFuture.runAsync(() -> VGModAction.sendWbMessage(player));
+
+				int delay = ThreadLocalRandom.current().nextInt(3000, 6000);
+				CompletableFuture.delayedExecutor(delay, TimeUnit.MILLISECONDS)
+						.execute(() -> Minecraft.getInstance().execute(() ->
+								VGModAction.sendWbMessage(player)
+				));
 			} catch (Exception e) {
 				VGMod.LOGGER.error("Error in chat listener", e);
 			}

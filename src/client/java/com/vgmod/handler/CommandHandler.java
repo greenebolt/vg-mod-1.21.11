@@ -6,8 +6,8 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.vgmod.Config;
 import com.vgmod.Constants;
 import com.vgmod.action.VGModAction;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -82,7 +82,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("help-VGMod").executes(
+                        ClientCommands.literal("vghelp").executes(
                                 CommandHandler::help
                         )
                 )
@@ -90,7 +90,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("lobby").executes(
+                        ClientCommands.literal("vglobby").executes(
                                 CommandHandler::lobby
                         )
                 )
@@ -98,7 +98,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("stats").executes(
+                        ClientCommands.literal("vgstats").executes(
                                 CommandHandler::stats
                         )
                 )
@@ -106,7 +106,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("rules").executes(
+                        ClientCommands.literal("vgrules").executes(
                                 CommandHandler::rules
                         )
                 )
@@ -114,7 +114,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("ranks").executes(
+                        ClientCommands.literal("vgranks").executes(
                                 CommandHandler::ranks
                         )
                 )
@@ -122,7 +122,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("info").executes(
+                        ClientCommands.literal("vginfo").executes(
                                 CommandHandler::info
                         )
                 )
@@ -130,7 +130,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("beans").executes(
+                        ClientCommands.literal("vgbeans").executes(
                                 CommandHandler::beans
                         )
                 )
@@ -138,7 +138,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("hats").executes(
+                        ClientCommands.literal("vghats").executes(
                                 CommandHandler::hats
                         )
                 )
@@ -146,7 +146,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("particles").executes(
+                        ClientCommands.literal("vgparticles").executes(
                                 CommandHandler::particles
                         )
                 )
@@ -154,7 +154,7 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("titles").executes(
+                        ClientCommands.literal("vgtitles").executes(
                                 CommandHandler::titles
                         )
                 )
@@ -162,10 +162,10 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("sbinfo")
+                        ClientCommands.literal("vgsbinfo")
                                 .executes(CommandHandler::sbinfoSelf)
                                 .then(
-                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                        ClientCommands.argument("value", StringArgumentType.string())
                                                 .suggests(SBINFO_SUGGESTIONS)
                                                 .executes(CommandHandler::sbinfo)
                                 )
@@ -174,13 +174,13 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("friend-VG")
+                        ClientCommands.literal("vgfriend")
                                 .then(
-                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                        ClientCommands.argument("value", StringArgumentType.string())
                                                 .suggests(FRIEND_SUGGESTIONS)
                                                 .executes(CommandHandler::friends)
                                                 .then (
-                                                        ClientCommandManager.argument("player", StringArgumentType.string())
+                                                        ClientCommands.argument("player", StringArgumentType.string())
                                                                 .executes(CommandHandler::friends)
                                                 )
                                 )
@@ -189,9 +189,9 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("friend-set-display")
+                        ClientCommands.literal("vgfriendsetdisplay")
                                 .then(
-                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                        ClientCommands.argument("value", StringArgumentType.string())
                                                 .suggests(FRIEND_DISPLAY_SUGGESTIONS)
                                                 .executes(CommandHandler::friendsSetDisplay)
                                 )
@@ -200,10 +200,10 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("toggle-wb-messages")
+                        ClientCommands.literal("vgtogglewbmessages")
                                 .executes(CommandHandler::toggleWbMessagesNoArg)
                                 .then(
-                                        ClientCommandManager.argument("value", StringArgumentType.string())
+                                        ClientCommands.argument("value", StringArgumentType.string())
                                                 .suggests(WB_SUGGESTIONS)
                                                 .executes(CommandHandler::toggleWbMessages)
                                 )
@@ -212,9 +212,9 @@ public class CommandHandler {
         ClientCommandRegistrationCallback.EVENT.register(
                 (dispatcher, registryAccess) -> dispatcher.register(
 
-                        ClientCommandManager.literal("join")
+                        ClientCommands.literal("vgjoin")
                                 .then(
-                                        ClientCommandManager.argument("game", StringArgumentType.string())
+                                        ClientCommands.argument("game", StringArgumentType.string())
                                                 .suggests(GAME_SUGGESTIONS)
                                                 .executes(CommandHandler::joinGame)
                                 )
@@ -314,7 +314,7 @@ public class CommandHandler {
             msg = Component.translatable("VGMod: Friends: "+Config.friendList)
                     .withStyle(ChatFormatting.DARK_GREEN);
         }
-        client.player.displayClientMessage(msg, false);
+        client.player.sendSystemMessage(msg);
         return 1;
     }
     private static int friendsSetDisplay(CommandContext<FabricClientCommandSource> context){
@@ -336,7 +336,7 @@ public class CommandHandler {
             Minecraft client = Minecraft.getInstance();
             Component msg = Component.translatable("Unknown value: \"%s\" Please use true/false", arg)
                     .withStyle(ChatFormatting.RED);
-            client.player.displayClientMessage(msg, false);
+            client.player.sendSystemMessage(msg);
         }
         return 1;
     }
